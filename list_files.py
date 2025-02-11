@@ -1,14 +1,19 @@
 import os
 
-def print_directory_structure(startpath='.'):
-    for root, dirs, files in os.walk(startpath):
-        level = root.replace(startpath, '').count(os.sep)
-        indent = ' ' * 4 * level
-        print(f"{indent}{os.path.basename(root)}/")
-        subindent = ' ' * 4 * (level + 1)
-        for f in files:
-            print(f"{subindent}{f}")
+def list_files(startpath, indent=0):
+    items = sorted(os.listdir(startpath))  # Sort items alphabetically
+    for index, item in enumerate(items):
+        path = os.path.join(startpath, item)
+        is_last = index == len(items) - 1  # Check if it's the last item
+
+        # Format the tree structure
+        prefix = "└── " if is_last else "├── "
+        print("   " * indent + prefix + item)
+
+        # Recursively list directories
+        if os.path.isdir(path):
+            list_files(path, indent + 1)
 
 if __name__ == "__main__":
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    print_directory_structure(script_dir)
+    print("\n📂 Directory Structure:\n")
+    list_files(".")
