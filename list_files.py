@@ -31,14 +31,18 @@ if __name__ == "__main__":
     exclude_pycache = ask_question("Do you want to exclude __pycache__ directories?")
 
     # Create sets based on user input
-    excluded_dirs = {".git", "__pycache__"} if exclude_git else set()
+    excluded_dirs = set()
+    if exclude_git:
+        excluded_dirs.add(".git")
     if exclude_pycache:
         excluded_dirs.add("__pycache__")
 
-    excluded_files = {".DS_Store"} if exclude_ds_store else set()
+    excluded_files = {"list_files.py"}  # Always exclude this script
+    if exclude_ds_store:
+        excluded_files.add(".DS_Store")
 
     print("\n📂 Directory Structure")
-    print("   Excluded: {} {} {}\n".format(
+    print("   Excluded: {} {} {} (list_files.py always excluded)\n".format(
         "(.git)" if exclude_git else "",
         "(.DS_Store)" if exclude_ds_store else "",
         "(__pycache__)" if exclude_pycache else ""
