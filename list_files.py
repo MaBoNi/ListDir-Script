@@ -19,22 +19,23 @@ def list_files(startpath, indent=0, excluded_dirs=set(), excluded_files=set()):
         if os.path.isdir(path):
             list_files(path, indent + 1, excluded_dirs, excluded_files)
 
+def ask_question(prompt, default="y"):
+    """ Asks a yes/no question with a default answer if Enter is pressed """
+    answer = input(f"{prompt} (Y/n): ").strip().lower()
+    return answer in ["", "y", "yes"]  # Default is Yes if empty
+
 if __name__ == "__main__":
-    # Ask user whether to exclude specific directories and files
-    exclude_git = input("Do you want to exclude the .git directory? (y/n): ").strip().lower() == 'y'
-    exclude_ds_store = input("Do you want to exclude .DS_Store files? (y/n): ").strip().lower() == 'y'
-    exclude_pycache = input("Do you want to exclude __pycache__ directories? (y/n): ").strip().lower() == 'y'
+    # Ask user whether to exclude specific directories and files (Default: Yes)
+    exclude_git = ask_question("Do you want to exclude the .git directory?")
+    exclude_ds_store = ask_question("Do you want to exclude .DS_Store files?")
+    exclude_pycache = ask_question("Do you want to exclude __pycache__ directories?")
 
     # Create sets based on user input
-    excluded_dirs = set()
-    excluded_files = set()
-
-    if exclude_git:
-        excluded_dirs.add(".git")
+    excluded_dirs = {".git", "__pycache__"} if exclude_git else set()
     if exclude_pycache:
         excluded_dirs.add("__pycache__")
-    if exclude_ds_store:
-        excluded_files.add(".DS_Store")
+
+    excluded_files = {".DS_Store"} if exclude_ds_store else set()
 
     print("\n📂 Directory Structure")
     print("   Excluded: {} {} {}\n".format(
